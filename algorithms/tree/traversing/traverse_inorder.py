@@ -5,8 +5,6 @@ class Node:
 		self.left_child = left_child
 		self.right_child = right_child
 
-	
-
 	def print_node(self):
 		print('Traversing node {}'.format(self.name))
 
@@ -30,8 +28,6 @@ def traverse_inorder_iterative_with_stack(root):
 		node.print_node()
 
 		current = node.right_child
-
-	
 
 def build_tree():
 
