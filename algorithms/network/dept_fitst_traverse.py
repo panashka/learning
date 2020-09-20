@@ -1,17 +1,17 @@
 
 class Node:
-	def __init__(self, name, links):
+	def __init__(self, name):
 		self.name = name
-		self.links = links
 		self.visited = False
+		self.links = []
 		
 	def print_node(self):
 		print('Traversing node {}'.format(self.name))
 		
 class Link:
-	def __init__(self, cost, to_node):
+	def __init__(self, cost, nodes):
 		self.cost = cost
-		self.to_node = to_node
+		self.nodes = nodes
 		
 def dept_first_traverse(start_node):
 	start_node.visited = True
@@ -23,19 +23,24 @@ def dept_first_traverse(start_node):
 		node.print_node()
 		
 		for link in node.links:
-			if not link.to_node.visited:
-				link.to_node.visited = True
-				stack.append(link.to_node)
+			if not link.nodes[1].visited:
+				link.nodes[1].visited = True
+				stack.append(link.nodes[1])
 				
 
-nodeA = Node('A',
-			[
-                                Link(10, 
-                                        Node('B', [])),
-                                Link(5,
-                                        Node('C', []))
-                        ]
-             )
+nodeA = Node('A')
+nodeB = Node('B')
+nodeC = Node('C')
+nodeD = Node('D')
+
+linkAB = Link(10, [nodeA, nodeB])
+linkBC = Link(5, [nodeB, nodeC])
+linkCD = Link(5, [nodeC, nodeD])
+linkAD = Link(6, [nodeA, nodeD])
+
+nodeA.links.append(linkAB)
+nodeA.links.append(linkAD)
+nodeB.links.append(linkBC)
+nodeC.links.append(linkCD)
 				
-print('starting program')
 dept_first_traverse(nodeA)
