@@ -1,4 +1,4 @@
-package com.digitalfuel.util;
+package com.tidalsoft.service.kubernetes.webclient.client.global;
 
 
 import java.util.List;
@@ -7,17 +7,16 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import static com.digitalfuel.util.Unit.UNIT;
 import static java.util.Optional.empty;
 
-
 /**
- * Created by ekrylovich
- * on 13.6.17.
+ * @author Eugene Pankov
+ * on 09/12/2020
  */
+@SuppressWarnings("PMD.ShortVariable")
 public final class Functions {
     private Functions() {
-        throw new UnsupportedOperationException("com.digitalfuel.util.Functions could not be instantiated as it is util class");
+        throw new UnsupportedOperationException(this.getClass() + " could not be instantiated as it is util class");
     }
 
     public static <V> Function<V, Optional<V>> alwaysPresent() {
@@ -63,9 +62,15 @@ public final class Functions {
     public static <A, B, C, D> Function<A, Function<B, Function<C, D>>> curry(final Function3<A, B, C, D> f) {
         return a -> (Function<B, Function<C, D>>) b -> (Function<C, D>) c -> f.apply(a, b, c);
     }
+
+    public static <A, B, C, D, F> Function<A, Function<B, BiFunction<C, D, F>>> partialCurry(final Function4<A, B, C, D, F> f) {
+        return a -> (Function<B, BiFunction<C, D, F>>) b -> (BiFunction<C, D, F>) (c, d) -> f.apply(a, b, c, d);
+    }
+
     public static <A, B, C> Function<A, C> andThen(final Function<A, ? extends B> f, final Function<B, C> g) {
         return f.andThen(g);
     }
+
     public static <A, B, C> Optional<C> apply(final Optional<A> val1, final Optional<B> val2, final Function<A, Function<B, C>> f) {
         return val1.flatMap(a -> val2.map(b -> f.apply(a).apply(b)));
     }
@@ -74,9 +79,9 @@ public final class Functions {
         return c -> f.apply(a, b, c);
     }
 
-    public static <B> Either<Unit, B> fromOptional(final Optional<B> value) {
-        return value.map((Function<B, Either<Unit, B>>) Either::right).orElse(Either.left(UNIT));
-    }
+//    public static <B> Either<Unit, B> fromOptional(final Optional<B> value) {
+//        return value.map((Function<B, Either<Unit, B>>) Either::right).orElse(Either.left(UNIT));
+//    }
 
     public static <A, B> Function<A, Function<B, A>> constant() {
         return curry((a, b) -> a);
